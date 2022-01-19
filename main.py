@@ -24,14 +24,14 @@ from variados import obtenerAptitud, obtenerDatosGraficaMax, obtenerDatosGrafica
 #-------------------------------------------------------
 generaciones = 100
 
-rangoMinimoX = 3
-rangoMinimoY = 50
+rangoMinimoX = 10
+rangoMinimoY = 10
 
-rangoMaximoX = 15
-rangoMaximoY = 85
+rangoMaximoX = 20
+rangoMaximoY = 20
 
-resolucionX = 0.4
-resolucionY = 0.4
+resolucionX = 0.1
+resolucionY = 0.1
 poblacionMaxima = 50
 poblacionInicial = 4
 
@@ -67,7 +67,8 @@ print(puntosNecesariosY ,"puntosNecesariosY ")
 
 def main():
     global listaMejoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales,listaPeoresAptitudesGeneracionales
-    seleccion= 2
+    listaMejoresGeneracion = []
+    seleccion= 0
     listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial,puntosNecesariosX,puntosNecesariosY)
     print("\n")
     for i in range(generaciones):
@@ -89,35 +90,53 @@ def main():
         listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY,resolucionY,bitsIndividuoY)
         listaAptitud = obtenerAptitud(listaFenotiposX,listaFenotiposY)
 
+
         
 
-        if(seleccion==1):
+        if(seleccion==0):
             listaIndividuos = podaMax(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima)
             mejor,peor,promedio = obtenerDatosGraficaMax(listaAptitud.copy())
             listaMejoresAptitudesGeneracionales.append(mejor)
             listaPeoresAptitudesGeneracionales.append(peor)
             listaPromedioAptitudesGeneracionales.append(promedio)
+
+            listaIndividuosX,listaIndividuosY = separarXY(listaIndividuos.copy(),bitsIndividuoX)
+            listaFenotiposX = obtencionFenotipo(listaIndividuosX,rangoMinimoX,resolucionX,bitsIndividuoX)
+            listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY,resolucionY,bitsIndividuoY)
+            listaAptitud = obtenerAptitud(listaFenotiposX,listaFenotiposY)
+
+            mejorGeneracion = max(listaAptitud)
+            indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
+            listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
+        
         else:
             listaIndividuos = podaMin(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima)
             mejor,peor,promedio = obtenerDatosGraficaMin(listaAptitud.copy())
             listaMejoresAptitudesGeneracionales.append(mejor)
             listaPeoresAptitudesGeneracionales.append(peor)
             listaPromedioAptitudesGeneracionales.append(promedio)
+
+            listaIndividuosX,listaIndividuosY = separarXY(listaIndividuos.copy(),bitsIndividuoX)
+            listaFenotiposX = obtencionFenotipo(listaIndividuosX,rangoMinimoX,resolucionX,bitsIndividuoX)
+            listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY,resolucionY,bitsIndividuoY)
+            listaAptitud = obtenerAptitud(listaFenotiposX,listaFenotiposY)
+
+            mejorGeneracion = min(listaAptitud)
+            indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
+            listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
         
   
-
-        # print("LISTAS INDIVIDUOS X Y Y")
-        # for i in range(len(listaIndividuosX)):
-        #     print(" ")
-        #     print(listaIndividuos[i]," con fenotipos ",listaFenotiposX[i],"  ",listaFenotiposY[i]," aptitud: ",listaAptitud[i])
-        #     print(listaIndividuosX[i])
-        #     print(listaIndividuosY[i])
+            
 
 
-        # print("lista de inidividuos despues poda")
-        # for i in listaIndividuos:
-        #     print(i)
-    
+        print("FENOTIPOS E INDIVIDUOS")
+        for i in range(len(listaFenotiposX)):
+            print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
+        
+        
+
+
+    print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
     crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
     pass
 

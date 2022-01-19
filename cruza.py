@@ -28,7 +28,6 @@ def cruza(listaIndividuos,totalBits):
         seleccionCruza2 = seleccionCruza[1]
         seleccionCruza3 = seleccionCruza[2]
         
-        print(listaIndividuos)
         padre = listaIndividuos[parejas[0][0]]
         madre = listaIndividuos[parejas[0][1]]
         hijo1, hijo2 = generarCruza(seleccionCruza1,seleccionCruza2,seleccionCruza3, padre, madre)
@@ -40,8 +39,6 @@ def cruza(listaIndividuos,totalBits):
 def generarCruza(corte1,corte2,corte3,padre,madre):
     hijo1 = []
     hijo2 = []
-    print("este es el padre", padre)
-    print("este es la madre ", madre)
     for index in range(len(padre)):
         if index < corte1:
             hijo1.append(padre[index])
