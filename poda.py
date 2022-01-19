@@ -104,6 +104,41 @@ def separarXY(listaIndividuos:list,bitsX):
     
     return listaIndividuosX,listaIndividuosY
 
+def podaMax(listaIndividuos,listaAptitud,poblacionMaxima):
+
+    listaMejoresIndividuosIndex = []
+    listaMejoresIndividuos = []
+    if(len(listaAptitud)<= poblacionMaxima):
+        return listaIndividuos
+    else:
+
+        for index in range(poblacionMaxima):
+            valorMaximo = max(listaAptitud)
+            indeiceMaximo = listaAptitud.index(valorMaximo)
+            listaMejoresIndividuosIndex.append(indeiceMaximo)
+            listaMejoresIndividuos.append(listaIndividuos[indeiceMaximo])
+            listaAptitud.pop(indeiceMaximo)
+
+
+    return listaMejoresIndividuos
+
+def podaMin(listaIndividuos,listaAptitud,poblacionMaxima):
+
+    listaMejoresIndividuosIndex = []
+    listaMejoresIndividuos = []
+    if(len(listaAptitud)<= poblacionMaxima):
+        return listaIndividuos
+    else:
+
+        for index in range(poblacionMaxima):
+            valorMaximo = min(listaAptitud)
+            indeiceMaximo = listaAptitud.index(valorMaximo)
+            listaMejoresIndividuosIndex.append(indeiceMaximo)
+            listaMejoresIndividuos.append(listaIndividuos[indeiceMaximo])
+            listaAptitud.pop(indeiceMaximo)
+
+
+    return listaMejoresIndividuos
 
 def obtencionFenotipo(listaIndividuos, rangoMinimo, resolucion, bitsIndividuo):
 

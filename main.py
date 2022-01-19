@@ -1,9 +1,12 @@
 from cgi import print_directory
 import math
+import statistics
 from cruza import cruza
+from grafica import crearGraficaDePuntos
 import inicializacion
 from mutacion import mutacion, remplazarMutados
-from poda import podaCandtidad, podaFueraLimites, separarXY
+from poda import obtencionFenotipo, podaCandtidad, podaFueraLimites, podaMax, podaMin, separarXY
+from variados import obtenerAptitud, obtenerDatosGraficaMax, obtenerDatosGraficaMin
 #-------------------------------------------------------
 # rangoMinimoX = 0
 # rangoMinimoY = 0
@@ -19,7 +22,7 @@ from poda import podaCandtidad, podaFueraLimites, separarXY
 # pmgY = 0
 # generaciones = 0
 #-------------------------------------------------------
-generaciones = 5
+generaciones = 100
 
 rangoMinimoX = 3
 rangoMinimoY = 50
@@ -29,7 +32,7 @@ rangoMaximoY = 85
 
 resolucionX = 0.4
 resolucionY = 0.4
-poblacionMaxima = 10
+poblacionMaxima = 50
 poblacionInicial = 4
 
 pmiX = 0.15
@@ -64,7 +67,7 @@ print(puntosNecesariosY ,"puntosNecesariosY ")
 
 def main():
     global listaMejoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales,listaPeoresAptitudesGeneracionales
-
+    seleccion= 2
     listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial,puntosNecesariosX,puntosNecesariosY)
     print("\n")
     for i in range(generaciones):
@@ -72,25 +75,50 @@ def main():
         print(f"GENERACION {i}")
         print(f"individuos de esta generacion   {len(listaIndividuos)}")
         print("\n")
+
         listaHijos=cruza(listaIndividuos.copy(),bitsTotal)
+
+
         indexMutados, hijosMutados = mutacion(listaHijos.copy(),pmiProm,pmgProm)
         listaHijos = remplazarMutados(listaHijos.copy(),indexMutados.copy(),hijosMutados)
         listaIndividuos.extend(listaHijos)
         listaIndividuos=podaFueraLimites(listaIndividuos.copy(),rangoMaximoX,rangoMinimoX,rangoMaximoY,rangoMinimoY,bitsIndividuoX,bitsIndividuoY,resolucionX,resolucionY)
-        listaIndividuos = podaCandtidad(listaIndividuos.copy(),poblacionMaxima)
 
         listaIndividuosX,listaIndividuosY = separarXY(listaIndividuos.copy(),bitsIndividuoX)
-        print("LISTAS INDIVIDUOS X Y Y")
-        for i in range(len(listaIndividuosX)):
-            print(" ")
-            print(listaIndividuos[i])
-            print(listaIndividuosX[i])
-            print(listaIndividuosY[i])
+        listaFenotiposX = obtencionFenotipo(listaIndividuosX,rangoMinimoX,resolucionX,bitsIndividuoX)
+        listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY,resolucionY,bitsIndividuoY)
+        listaAptitud = obtenerAptitud(listaFenotiposX,listaFenotiposY)
+
+        
+
+        if(seleccion==1):
+            listaIndividuos = podaMax(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima)
+            mejor,peor,promedio = obtenerDatosGraficaMax(listaAptitud.copy())
+            listaMejoresAptitudesGeneracionales.append(mejor)
+            listaPeoresAptitudesGeneracionales.append(peor)
+            listaPromedioAptitudesGeneracionales.append(promedio)
+        else:
+            listaIndividuos = podaMin(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima)
+            mejor,peor,promedio = obtenerDatosGraficaMin(listaAptitud.copy())
+            listaMejoresAptitudesGeneracionales.append(mejor)
+            listaPeoresAptitudesGeneracionales.append(peor)
+            listaPromedioAptitudesGeneracionales.append(promedio)
+        
+  
+
+        # print("LISTAS INDIVIDUOS X Y Y")
+        # for i in range(len(listaIndividuosX)):
+        #     print(" ")
+        #     print(listaIndividuos[i]," con fenotipos ",listaFenotiposX[i],"  ",listaFenotiposY[i]," aptitud: ",listaAptitud[i])
+        #     print(listaIndividuosX[i])
+        #     print(listaIndividuosY[i])
 
 
         # print("lista de inidividuos despues poda")
         # for i in listaIndividuos:
         #     print(i)
+    
+    crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
     pass
 
 if __name__ == "__main__":
