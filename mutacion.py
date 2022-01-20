@@ -30,14 +30,8 @@ def mutacion(listaHijos,pmi,pmg):
 
 def remplazarMutados(listaHijos:list,indexMutados,listaMutados):
     indexMutados.reverse()
-    # print("index que van a quitarse")
-    # print(indexMutados)
     for index in indexMutados:
         listaHijos.pop(index)
-    # print("hijos sin mutados")
-    # print(listaHijos)
     listaHijos.extend(listaMutados)
-    # print("hijos con mutados")
-    # print(listaHijos)
     return listaHijos
 

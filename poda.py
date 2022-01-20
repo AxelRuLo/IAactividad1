@@ -97,10 +97,6 @@ def separarXY(listaIndividuos:list,bitsX):
     for index in range(len(listaIndividuos)):
         listaIndividuosX.append(listaIndividuos[index][0:bitsX])
         listaIndividuosY.append(listaIndividuos[index][bitsX:len(listaIndividuos)])
-
-    # print(listaIndividuosX[0])
-    # print(listaIndividuosY[0])
-    
     
     return listaIndividuosX,listaIndividuosY
 

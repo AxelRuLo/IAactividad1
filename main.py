@@ -1,11 +1,9 @@
-from cgi import print_directory
 import math
-import statistics
 from cruza import cruza
 from grafica import crearGraficaDePuntos
 import inicializacion
 from mutacion import mutacion, remplazarMutados
-from poda import obtencionFenotipo, podaCandtidad, podaFueraLimites, podaMax, podaMin, separarXY
+from poda import obtencionFenotipo, podaFueraLimites, podaMax, podaMin, separarXY
 from variados import obtenerAptitud, obtenerDatosGraficaMax, obtenerDatosGraficaMin
 #-------------------------------------------------------
 # rangoMinimoX = 0
@@ -60,10 +58,10 @@ bitsIndividuoY = inicializacion.SacarBits(puntosNecesariosY)
 bitsTotal = bitsIndividuoX + bitsIndividuoY
 #-------------------------------------------------------
 
-print(bitsIndividuoX,"bits de x")
-print(bitsIndividuoY,"bits de y")
-print(puntosNecesariosX,"puntosNecesariosX ")
-print(puntosNecesariosY ,"puntosNecesariosY ")
+# print(bitsIndividuoX,"bits de x")
+# print(bitsIndividuoY,"bits de y")
+# print(puntosNecesariosX,"puntosNecesariosX ")
+# print(puntosNecesariosY ,"puntosNecesariosY ")
 
 def main():
     global listaMejoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales,listaPeoresAptitudesGeneracionales

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 
 def crearGraficaDePuntos(mejor, peor, promedio):
+    plt.close()
     # print("ESTOS SON LOS DATOS DE LA GRAFICA")
     # print("TAMAÑO", len(mejor))
     # print("TAMAÑO", len(peor))
