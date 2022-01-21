@@ -78,17 +78,34 @@ def podaFueraLimites(listaIndividuos: list, rangoMaximoX, rangoMinimoX, rangoMax
     listaFenotipoY = obtencionFenotipo(listaIndividuosY,rangoMinimoY,resolucionY,bitsY)
 
     for index in range(len(listaFenotipoX)):
-        if((listaFenotipoX[index]>rangoMaximoX or listaFenotipoX[index]<rangoMinimoX)or (listaFenotipoY[index]<rangoMinimoY or listaFenotipoY[index]>rangoMaximoY)):
-            # print("este necesito poda porqeu fenotipo x = ",listaFenotipoX[index]," y fenotiop y = ",listaFenotipoY[index])
+        fenotipoX = listaFenotipoX[index]
+        fenotipoY = listaFenotipoY[index]
+        suma = fenotipoX + fenotipoY
+        if((fenotipoX>rangoMaximoX or fenotipoX<rangoMinimoX)or (fenotipoY<rangoMinimoY or fenotipoY>rangoMaximoY)):
             listaNecesitanPoda.append(index)
+        else:
+            if(suma>1 or suma<-1):
+                listaNecesitanPoda.append(index)
+            else:
+                print("no necistio poda fenotipo x = ",listaFenotipoX[index]," y fenotiop y = ",listaFenotipoY[index],"total",{fenotipoX+fenotipoY})
     
+
     listaNecesitanPoda.reverse()
+
     for index in listaNecesitanPoda:
+        listaFenotipoX.pop(index)
+        listaFenotipoY.pop(index)
         listaIndividuos.pop(index)
 
-    return listaIndividuos
+    print("\n ESTOS SON LOS INDIVIDUOS QUE MANDAMOS DESPUES DE LA PODA")
+    for i in range(len(listaIndividuos)):
+        print(f"fenotipo x {listaFenotipoX[i]} fenotipo y {listaFenotipoY[i]} individuo {listaIndividuos[i]}")
 
 
+    return listaIndividuos,listaFenotipoX,listaFenotipoY
+
+def podaNoValidos(listaIndividuos:list,listaIndexInvalidos):
+    pass
 
 def separarXY(listaIndividuos:list,bitsX):
     listaIndividuosX = []
@@ -107,7 +124,6 @@ def podaMax(listaIndividuos,listaAptitud,poblacionMaxima):
     if(len(listaAptitud)<= poblacionMaxima):
         return listaIndividuos
     else:
-
         for index in range(poblacionMaxima):
             valorMaximo = max(listaAptitud)
             indeiceMaximo = listaAptitud.index(valorMaximo)
@@ -118,23 +134,24 @@ def podaMax(listaIndividuos,listaAptitud,poblacionMaxima):
 
     return listaMejoresIndividuos
 
-def podaMin(listaIndividuos,listaAptitud,poblacionMaxima):
+def podaMin(listaIndividuos,listaAptitud,poblacionMaxima,fenotiposX,fenotiposY):
 
-    listaMejoresIndividuosIndex = []
+    listaFenotipoX =[]
+    listaFenotipoY =[]
     listaMejoresIndividuos = []
     if(len(listaAptitud)<= poblacionMaxima):
-        return listaIndividuos
+        return listaIndividuos,fenotiposX,fenotiposY
     else:
-
         for index in range(poblacionMaxima):
             valorMaximo = min(listaAptitud)
             indeiceMaximo = listaAptitud.index(valorMaximo)
-            listaMejoresIndividuosIndex.append(indeiceMaximo)
             listaMejoresIndividuos.append(listaIndividuos[indeiceMaximo])
+            listaFenotipoX.append(fenotiposX[indeiceMaximo])
+            listaFenotipoY.append(fenotiposY[indeiceMaximo])
             listaAptitud.pop(indeiceMaximo)
 
 
-    return listaMejoresIndividuos
+    return listaMejoresIndividuos,listaFenotipoX,listaFenotipoY
 
 def obtencionFenotipo(listaIndividuos, rangoMinimo, resolucion, bitsIndividuo):
 
@@ -148,7 +165,7 @@ def obtencionFenotipo(listaIndividuos, rangoMinimo, resolucion, bitsIndividuo):
             numeroElevacion -= 1
         fenotipo = (puntosTotales * resolucion) + rangoMinimo
         # print(f"este es el fonotippo de el individuo {individuos}: {fenotipo}")
-        listaFenotipo.append(round(fenotipo, 3))
+        listaFenotipo.append(fenotipo)
     return listaFenotipo
 
 def podaCandtidad(listaIndividuos:list,poblacionMaximo):

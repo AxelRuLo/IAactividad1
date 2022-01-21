@@ -1,15 +1,23 @@
 import math
 import statistics
 
-
+# neceisita refactor
 def obtenerAptitud(listaFenotiposXlist:list, listaFenotiposYlist:list):
     listaAptitud = []
+    print(f"este es el tamaño de x {len(listaFenotiposXlist)} y {len(listaFenotiposYlist)}")
+
     for index in range(len(listaFenotiposXlist)):
         x = listaFenotiposXlist[index]
         y = listaFenotiposYlist[index]
+        # ///////////////////////
         aux= (x**2 + y**2)
-        aux2 = math.asin(math.pi/(x+y))
-        listaAptitud.append(aux * aux2)
+        print(f"fenotipo x {x} fenotipo y {y} {x+y} index {index}")
+        # aux2 = math.asin(math.pi/(x+y))
+        aux2 = math.asin(x+y)
+        aux3 = aux * aux2
+        listaAptitud.append(aux3)
+
+        # ///////////////////////
     return listaAptitud
 
 def obtenerDatosGraficaMax(aptitudes):
