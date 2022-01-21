@@ -1,11 +1,13 @@
 import tkinter as tk
 import math
 from turtle import back
+
+from numpy import true_divide
 from cruza import cruza
 from grafica import crearGraficaDePuntos
 import inicializacion
 from mutacion import mutacion, remplazarMutados
-from poda import obtencionFenotipo, podaFueraLimites, podaMax, podaMin, separarXY
+from poda import  podaFueraLimites, podaMax, podaMin, separarXY
 from variados import obtenerAptitud, obtenerDatosGraficaMax, obtenerDatosGraficaMin
 
 window = tk.Tk()
@@ -40,6 +42,8 @@ resolucionY.set(0.01)
 poblacionMaxima.set(50)
 poblacionInicial.set(4)
 
+mostrarGrafica = True
+
 pmiX = tk.DoubleVar()
 pmiY = tk.DoubleVar()
 pmgX = tk.DoubleVar()
@@ -56,81 +60,8 @@ resultado = tk.StringVar()
 
 # functions
 def resultadosMaximo():
-    notificacion.set("")
-    pmiProm = (pmiX.get() + pmiY.get()) /2
-    pmgProm = (pmgX.get() + pmgY.get()) /2
-    rangoTotalX = rangoMaximoX.get() - rangoMinimoX.get()
-    rangoTotalY = rangoMaximoY.get() - rangoMinimoY.get()
-    puntosNecesariosX =  math.ceil((rangoTotalX / resolucionX.get()) + 1)
-    puntosNecesariosY =  math.ceil((rangoTotalY / resolucionY.get()) + 1)
-    listaIndividuos = []
-    listaMejoresAptitudesGeneracionales = []
-    listaPeoresAptitudesGeneracionales = []
-    listaPromedioAptitudesGeneracionales = []
-    bitsIndividuoX = inicializacion.SacarBits(puntosNecesariosX)
-    bitsIndividuoY = inicializacion.SacarBits(puntosNecesariosY)
-    bitsTotal = bitsIndividuoX + bitsIndividuoY
-
-    # print(f"rangoTotalX {rangoTotalX}")
-    # print(f"rangoTotalY {rangoTotalY}")
-    # print(f"puntos necesarios X {puntosNecesariosX}")
-    # print(f"puntos necesarios y {puntosNecesariosY}")
-    # print(f"bits necesarios x {bitsIndividuoX}")
-    # print(f"bits necesarios y {bitsIndividuoY}")
-    
-
-    listaMejoresGeneracion = []
-    listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial.get(),puntosNecesariosX,puntosNecesariosY)
-    print("\n")
-
-    for i in range(generaciones.get()):
-        print("\n")
-        print(f"GENERACION {i}")
-        print(f"individuos de esta generacion   {len(listaIndividuos)}")
-
-
-        listaHijos=cruza(listaIndividuos.copy(),bitsTotal)
-
-
-        indexMutados, hijosMutados = mutacion(listaHijos.copy(),pmiProm,pmgProm)
-        listaHijos = remplazarMutados(listaHijos.copy(),indexMutados.copy(),hijosMutados)
-        listaIndividuos.extend(listaHijos)
-        listaIndividuos=podaFueraLimites(listaIndividuos.copy(),rangoMaximoX.get(),rangoMinimoX.get(),rangoMaximoY.get(),rangoMinimoY.get(),bitsIndividuoX,bitsIndividuoY,resolucionX.get(),resolucionY.get())
-
-        if(len(listaIndividuos)<1):
-            break
-
-        listaIndividuosX,listaIndividuosY = separarXY(listaIndividuos.copy(),bitsIndividuoX)
-        listaFenotiposX = obtencionFenotipo(listaIndividuosX,rangoMinimoX.get(),resolucionX.get(),bitsIndividuoX)
-        listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY.get(),resolucionY.get(),bitsIndividuoY)
-        listaAptitud = obtenerAptitud(listaFenotiposX.copy(),listaFenotiposY.copy())
-
-
-        
-
-  
-        listaIndividuos = podaMax(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima.get())
-        mejor,peor,promedio = obtenerDatosGraficaMax(listaAptitud.copy())
-        listaMejoresAptitudesGeneracionales.append(mejor)
-        listaPeoresAptitudesGeneracionales.append(peor)
-        listaPromedioAptitudesGeneracionales.append(promedio)
-        listaIndividuosX,listaIndividuosY = separarXY(listaIndividuos.copy(),bitsIndividuoX)
-        listaFenotiposX = obtencionFenotipo(listaIndividuosX,rangoMinimoX.get(),resolucionX.get(),bitsIndividuoX)
-        listaFenotiposY = obtencionFenotipo(listaIndividuosY,rangoMinimoY.get(),resolucionY.get(),bitsIndividuoY)
-        listaAptitud = obtenerAptitud(listaFenotiposX.copy(),listaFenotiposY.copy())
-        mejorGeneracion = max(listaAptitud)
-        indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
-        listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
-
-        
-        print("FENOTIPOS E INDIVIDUOS")
-        for i in range(len(listaFenotiposX)):
-            print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
-        
-    print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
-    crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
-
-def resultadoMinimo():
+    global mostrarGrafica
+    mostrarGrafica = True
     notificacion.set("")
     pmiProm = (pmiX.get() + pmiY.get()) /2
     pmgProm = (pmgX.get() + pmgY.get()) /2
@@ -168,8 +99,82 @@ def resultadoMinimo():
         listaIndividuos,listaFenotiposX,listaFenotiposY=podaFueraLimites(listaIndividuos.copy(),rangoMaximoX.get(),rangoMinimoX.get(),rangoMaximoY.get(),rangoMinimoY.get(),bitsIndividuoX,bitsIndividuoY,resolucionX.get(),resolucionY.get())
 
 # COMPROBACION DE SI SIGUEN VIVAS LAS POBLACIONES /////////////////////////////////////////////////////
-        if(len(listaIndividuos)<1):
-            notificacion.set(f"La poblacion ha muerto en la generacion {i}, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
+        print("\n AQUI SE COMOPRUEBAN QUE NO ESTE EN 0")
+        if(len(listaIndividuos)==0):
+            if(i==0):
+                mostrarGrafica = False
+                notificacion.set(f"es probable que para este rango no tenga solucion la ecuacion, probar con mas individuos/generaciones prodria ayudar ")
+            else:
+                notificacion.set(f"La poblacion ha muerto en la generacion {i}, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
+            break
+
+#  SACAR LOS PROMEDIO POR GENERACION PARA LA LISTA GENERAL DE GENERACIONES
+        listaAptitud = obtenerAptitud(listaFenotiposX.copy(),listaFenotiposY.copy())
+        listaIndividuos,listaFenotiposX,listaFenotiposY = podaMax(listaIndividuos.copy(),listaAptitud.copy(),poblacionMaxima.get(),listaFenotiposX.copy(),listaFenotiposY.copy())
+        mejor,peor,promedio = obtenerDatosGraficaMax(listaAptitud.copy())
+        listaMejoresAptitudesGeneracionales.append(mejor)
+        listaPeoresAptitudesGeneracionales.append(peor)
+        listaPromedioAptitudesGeneracionales.append(promedio)
+        listaAptitud = obtenerAptitud(listaFenotiposX.copy(),listaFenotiposY.copy())
+        mejorGeneracion = max(listaAptitud)
+        indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
+        listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
+
+# IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
+        print("FENOTIPOS E INDIVIDUOS")
+        for i in range(len(listaFenotiposX)):
+            print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
+        
+    print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
+    crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
+
+def resultadoMinimo():
+    global mostrarGrafica
+    mostrarGrafica = True
+    notificacion.set("")
+    pmiProm = (pmiX.get() + pmiY.get()) /2
+    pmgProm = (pmgX.get() + pmgY.get()) /2
+    rangoTotalX = rangoMaximoX.get() - rangoMinimoX.get()
+    rangoTotalY = rangoMaximoY.get() - rangoMinimoY.get()
+    puntosNecesariosX =  math.ceil((rangoTotalX / resolucionX.get()) + 1)
+    puntosNecesariosY =  math.ceil((rangoTotalY / resolucionY.get()) + 1)
+    listaIndividuos = []
+    listaMejoresAptitudesGeneracionales = []
+    listaPeoresAptitudesGeneracionales = []
+    listaPromedioAptitudesGeneracionales = []
+    bitsIndividuoX = inicializacion.SacarBits(puntosNecesariosX)
+    bitsIndividuoY = inicializacion.SacarBits(puntosNecesariosY)
+    bitsTotal = bitsIndividuoX + bitsIndividuoY
+
+    listaMejoresGeneracion = []
+    listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial.get(),puntosNecesariosX,puntosNecesariosY)
+
+    for i in range(generaciones.get()):
+# ENCABEZADO DE CONSOLA /////////////////////////////////////////////////////
+        print("\n")
+        print(f"GENERACION {i}")
+        print(f"individuos de esta generacion   {len(listaIndividuos)}")
+
+
+# CRUZA DE HIJOS /////////////////////////////////////////////////////
+        listaHijos=cruza(listaIndividuos.copy(),bitsTotal)
+
+# MUTACION DE HIJOS /////////////////////////////////////////////////////
+        indexMutados, hijosMutados = mutacion(listaHijos.copy(),pmiProm,pmgProm)
+        listaHijos = remplazarMutados(listaHijos.copy(),indexMutados.copy(),hijosMutados)
+        listaIndividuos.extend(listaHijos)
+
+# PODA FUERA DE LIMITES /////////////////////////////////////////////////////
+        listaIndividuos,listaFenotiposX,listaFenotiposY=podaFueraLimites(listaIndividuos.copy(),rangoMaximoX.get(),rangoMinimoX.get(),rangoMaximoY.get(),rangoMinimoY.get(),bitsIndividuoX,bitsIndividuoY,resolucionX.get(),resolucionY.get())
+
+# COMPROBACION DE SI SIGUEN VIVAS LAS POBLACIONES /////////////////////////////////////////////////////
+        print("\n AQUI SE COMOPRUEBAN QUE NO ESTE EN 0")
+        if(len(listaIndividuos)==0):
+            if(i==0):
+                mostrarGrafica = False
+                notificacion.set(f"es probable que para este rango no tenga solucion la ecuacion, probar con mas individuos/generaciones prodria ayudar ")
+            else:
+                notificacion.set(f"La poblacion ha muerto en la generacion {i}, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
             break
 
 #  SACAR LOS PROMEDIO POR GENERACION PARA LA LISTA GENERAL DE GENERACIONES
@@ -190,7 +195,10 @@ def resultadoMinimo():
             print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
         
     print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
-    crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
+
+    if(mostrarGrafica):
+        crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
+
         
 
 # labels
@@ -245,6 +253,6 @@ tk.Entry(window,textvariable=pmgX,font=('Calibri', 14),width=15).place(x=640,y=5
 
 # buton
 tk.Button(window,font=('Calibri', 14),text="minimo",command=resultadoMinimo,).place(x=450,y=700)
-# tk.Button(window,font=('Calibri', 14),text="maximo",command=resultadosMaximo,).place(x=250,y=700)
+tk.Button(window,font=('Calibri', 14),text="maximo",command=resultadosMaximo,).place(x=250,y=700)
 
 window.mainloop()

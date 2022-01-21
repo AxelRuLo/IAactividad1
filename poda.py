@@ -117,22 +117,26 @@ def separarXY(listaIndividuos:list,bitsX):
     
     return listaIndividuosX,listaIndividuosY
 
-def podaMax(listaIndividuos,listaAptitud,poblacionMaxima):
+def podaMax(listaIndividuos,listaAptitud,poblacionMaxima,fenotiposX,fenotiposY):
 
+    listaFenotipoX =[]
+    listaFenotipoY =[]
     listaMejoresIndividuosIndex = []
     listaMejoresIndividuos = []
     if(len(listaAptitud)<= poblacionMaxima):
-        return listaIndividuos
+        return listaIndividuos,fenotiposX,fenotiposY
     else:
         for index in range(poblacionMaxima):
             valorMaximo = max(listaAptitud)
             indeiceMaximo = listaAptitud.index(valorMaximo)
             listaMejoresIndividuosIndex.append(indeiceMaximo)
             listaMejoresIndividuos.append(listaIndividuos[indeiceMaximo])
+            listaFenotipoX.append(fenotiposX[indeiceMaximo])
+            listaFenotipoY.append(fenotiposY[indeiceMaximo])
             listaAptitud.pop(indeiceMaximo)
 
 
-    return listaMejoresIndividuos
+    return listaMejoresIndividuos,listaFenotipoX,listaFenotipoY
 
 def podaMin(listaIndividuos,listaAptitud,poblacionMaxima,fenotiposX,fenotiposY):
 
