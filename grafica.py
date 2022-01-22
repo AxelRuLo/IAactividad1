@@ -32,7 +32,7 @@ def crearGraficaDePuntos(mejor, peor, promedio):
         # markerfacecolor="black",
     )
     plt.legend()
-    plt.xlabel("Generacione")
+    plt.xlabel("Generaciones")
     plt.ylabel("Aptitud")
-    plt.title("EvolucionGeneraciones")
+    plt.title("Evolucion de generaciones")
     plt.show()

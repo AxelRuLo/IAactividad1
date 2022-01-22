@@ -18,7 +18,7 @@ window.config(bg="#ACD7F6")
 
 
 generaciones = tk.IntVar()
-generaciones.set(100)
+generaciones.set(150)
 
 rangoMinimoX = tk.DoubleVar()
 rangoMinimoY = tk.DoubleVar()
@@ -39,8 +39,8 @@ poblacionInicial = tk.IntVar()
 
 resolucionX.set(0.01)
 resolucionY.set(0.01)
-poblacionMaxima.set(50)
-poblacionInicial.set(4)
+poblacionMaxima.set(100)
+poblacionInicial.set(50)
 
 mostrarGrafica = True
 
@@ -105,7 +105,7 @@ def resultadosMaximo():
                 mostrarGrafica = False
                 notificacion.set(f"es probable que para este rango no tenga solucion la ecuacion, probar con mas individuos/generaciones prodria ayudar ")
             else:
-                notificacion.set(f"La poblacion ha muerto en la generacion {i}, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
+                notificacion.set(f"Intenta de nuevo, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
             break
 
 #  SACAR LOS PROMEDIO POR GENERACION PARA LA LISTA GENERAL DE GENERACIONES
@@ -126,7 +126,8 @@ def resultadosMaximo():
             print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
         
     print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
-    crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
+    if(mostrarGrafica):
+        crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
 
 def resultadoMinimo():
     global mostrarGrafica
@@ -174,7 +175,7 @@ def resultadoMinimo():
                 mostrarGrafica = False
                 notificacion.set(f"es probable que para este rango no tenga solucion la ecuacion, probar con mas individuos/generaciones prodria ayudar ")
             else:
-                notificacion.set(f"La poblacion ha muerto en la generacion {i}, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
+                notificacion.set(f"Intenta de nuevo, probar con mas individuos/generaciones ayuda si el rango es muy amplio > 5 ")
             break
 
 #  SACAR LOS PROMEDIO POR GENERACION PARA LA LISTA GENERAL DE GENERACIONES
@@ -192,7 +193,7 @@ def resultadoMinimo():
 # IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
         print("FENOTIPOS E INDIVIDUOS")
         for i in range(len(listaFenotiposX)):
-            print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]}")
+            print(f"individuo {listaIndividuos[i]} con fenotipo x = {listaFenotiposX[i]} con fenotipo y {listaFenotiposY[i]} {listaAptitud[i]} aptitud = {listaAptitud[i]}")
         
     print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
 
