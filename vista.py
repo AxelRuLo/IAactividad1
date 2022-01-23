@@ -1,10 +1,11 @@
+import statistics
 import tkinter as tk
 import math
 from turtle import back
 
 from numpy import true_divide
 from cruza import cruza
-from grafica import crearGraficaDePuntos
+from grafica import crearGrafica2D, crearGraficaDePuntos
 import inicializacion
 from mutacion import mutacion, remplazarMutados
 from poda import  podaFueraLimites, podaMax, podaMin, separarXY
@@ -13,7 +14,7 @@ from variados import obtenerAptitud, obtenerDatosGraficaMax, obtenerDatosGrafica
 window = tk.Tk()
 window.title("sintaxis")
 window.geometry("820x800")
-window.resizable(False, False)
+window.resizable(True, True)
 window.config(bg="#ACD7F6")
 
 
@@ -62,7 +63,7 @@ resultado = tk.StringVar()
 def resultadosMaximo():
     global mostrarGrafica
     mostrarGrafica = True
-    notificacion.set("")
+    notificacion.set(" ")
     pmiProm = (pmiX.get() + pmiY.get()) /2
     pmgProm = (pmgX.get() + pmgY.get()) /2
     rangoTotalX = rangoMaximoX.get() - rangoMinimoX.get()
@@ -78,6 +79,8 @@ def resultadosMaximo():
     bitsTotal = bitsIndividuoX + bitsIndividuoY
 
     listaMejoresGeneracion = []
+    listaPeorGeneracion = []
+    listaPromedioGeneracion = []
     listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial.get(),puntosNecesariosX,puntosNecesariosY)
 
     for i in range(generaciones.get()):
@@ -118,7 +121,15 @@ def resultadosMaximo():
         listaAptitud = obtenerAptitud(listaFenotiposX.copy(),listaFenotiposY.copy())
         mejorGeneracion = max(listaAptitud)
         indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
+        peorGeneracion = min(listaAptitud)
+        indexPeorGeneracion = listaAptitud.index(peorGeneracion)
+
+        
         listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
+        listaPeorGeneracion.append([listaFenotiposX[indexPeorGeneracion],listaFenotiposY[indexPeorGeneracion]])
+        # listaPromedioGeneracion.append([listaFenotiposX[indexMejorGeneracin] +listaFenotiposX[indexPeorGeneracion]/2 ,listaFenotiposY[indexMejorGeneracin] +listaFenotiposY[indexPeorGeneracion]/2])
+        listaPromedioGeneracion.append([statistics.mean(listaFenotiposX) ,statistics.mean(listaFenotiposY)])
+        
 
 # IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
         print("FENOTIPOS E INDIVIDUOS")
@@ -128,11 +139,12 @@ def resultadosMaximo():
     print(f"Mejor aptitud por generaciones {listaMejoresGeneracion}")
     if(mostrarGrafica):
         crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
-
+        leyenda = crearGrafica2D(listaMejoresGeneracion,listaPeorGeneracion,listaPromedioGeneracion,"Maximo")
+        notificacion.set(leyenda)
 def resultadoMinimo():
     global mostrarGrafica
     mostrarGrafica = True
-    notificacion.set("")
+    notificacion.set(" ")
     pmiProm = (pmiX.get() + pmiY.get()) /2
     pmgProm = (pmgX.get() + pmgY.get()) /2
     rangoTotalX = rangoMaximoX.get() - rangoMinimoX.get()
@@ -148,6 +160,8 @@ def resultadoMinimo():
     bitsTotal = bitsIndividuoX + bitsIndividuoY
 
     listaMejoresGeneracion = []
+    listaPeorGeneracion = []
+    listaPromedioGeneracion = []
     listaIndividuos = inicializacion.generacionIndividuosIniciales(bitsIndividuoX,bitsIndividuoY,poblacionInicial.get(),puntosNecesariosX,puntosNecesariosY)
 
     for i in range(generaciones.get()):
@@ -189,6 +203,16 @@ def resultadoMinimo():
         mejorGeneracion = min(listaAptitud)
         indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
         listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
+        
+        mejorGeneracion = min(listaAptitud)
+        indexMejorGeneracin = listaAptitud.index(mejorGeneracion)
+        peorGeneracion = max(listaAptitud)
+        indexPeorGeneracion = listaAptitud.index(peorGeneracion)
+
+        
+        listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
+        listaPeorGeneracion.append([listaFenotiposX[indexPeorGeneracion],listaFenotiposY[indexPeorGeneracion]])
+        listaPromedioGeneracion.append([statistics.mean(listaFenotiposX) ,statistics.mean(listaFenotiposY)])
 
 # IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
         print("FENOTIPOS E INDIVIDUOS")
@@ -199,7 +223,8 @@ def resultadoMinimo():
 
     if(mostrarGrafica):
         crearGraficaDePuntos(listaMejoresAptitudesGeneracionales,listaPeoresAptitudesGeneracionales,listaPromedioAptitudesGeneracionales)
-
+        leyenda = crearGrafica2D(listaMejoresGeneracion,listaPeorGeneracion,listaPromedioGeneracion,"Minimo")
+        notificacion.set(leyenda)
         
 
 # labels
@@ -226,7 +251,7 @@ tk.Label(window,text="pmg Y",font=('Calibri', 14),background="#ACD7F6").place(x=
 tk.Label(window,text="pmg Y",font=('Calibri', 14),background="#ACD7F6").place(x=440,y=450)
 
 
-tk.Label(window,textvariable=notificacion,font=('Calibri', 12),background="#ACD7F6").place(x=10,y=600)
+tk.Label(window,textvariable=notificacion,font=('Calibri', 12),background="#ACD7F6").place(x=10,y=580)
 
 
 
@@ -253,7 +278,7 @@ tk.Entry(window,textvariable=pmgY,font=('Calibri', 14),width=15).place(x=440,y=5
 tk.Entry(window,textvariable=pmgX,font=('Calibri', 14),width=15).place(x=640,y=500)
 
 # buton
-tk.Button(window,font=('Calibri', 14),text="minimo",command=resultadoMinimo,).place(x=450,y=700)
-tk.Button(window,font=('Calibri', 14),text="maximo",command=resultadosMaximo,).place(x=250,y=700)
+tk.Button(window,font=('Calibri', 14),text="minimo",command=resultadoMinimo,).place(x=450,y=650)
+tk.Button(window,font=('Calibri', 14),text="maximo",command=resultadosMaximo,).place(x=250,y=650)
 
 window.mainloop()
