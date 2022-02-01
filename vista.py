@@ -5,7 +5,7 @@ from turtle import back
 
 from numpy import true_divide
 from cruza import cruza
-from grafica import crearGrafica2D, crearGraficaDePuntos
+from grafica import crearGrafica2D, crearGraficaDePuntos, crearImagePuntos, crearImagenAptitud
 import inicializacion
 from mutacion import mutacion, remplazarMutados
 from poda import  podaFueraLimites, podaMax, podaMin, separarXY
@@ -129,8 +129,8 @@ def resultadosMaximo():
         listaPeorGeneracion.append([listaFenotiposX[indexPeorGeneracion],listaFenotiposY[indexPeorGeneracion]])
         # listaPromedioGeneracion.append([listaFenotiposX[indexMejorGeneracin] +listaFenotiposX[indexPeorGeneracion]/2 ,listaFenotiposY[indexMejorGeneracin] +listaFenotiposY[indexPeorGeneracion]/2])
         listaPromedioGeneracion.append([statistics.mean(listaFenotiposX) ,statistics.mean(listaFenotiposY)])
-        
-
+        # crearGraficaDePuntos(listaMejoresGeneracion.copy(),listaPeorGeneracion.copy(),listaPromedioGeneracion.copy())
+        crearImagePuntos(listaMejoresGeneracion.copy(),listaPeorGeneracion.copy(),listaPromedioGeneracion.copy(),"Maximo")
 # IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
         print("FENOTIPOS E INDIVIDUOS")
         for i in range(len(listaFenotiposX)):
@@ -213,7 +213,8 @@ def resultadoMinimo():
         listaMejoresGeneracion.append([listaFenotiposX[indexMejorGeneracin],listaFenotiposY[indexMejorGeneracin]])
         listaPeorGeneracion.append([listaFenotiposX[indexPeorGeneracion],listaFenotiposY[indexPeorGeneracion]])
         listaPromedioGeneracion.append([statistics.mean(listaFenotiposX) ,statistics.mean(listaFenotiposY)])
-
+        # crearImagenAptitud(listaMejoresGeneracion.copy(),listaPeorGeneracion.copy(),listaPromedioGeneracion.copy())
+        crearImagePuntos(listaMejoresGeneracion.copy(),listaPeorGeneracion.copy(),listaPromedioGeneracion.copy(),"Minimo")
 # IMPRECIONES DE LOS RESULTADOS DE LA GENERACION
         print("FENOTIPOS E INDIVIDUOS")
         for i in range(len(listaFenotiposX)):
